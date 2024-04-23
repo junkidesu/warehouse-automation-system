@@ -1,0 +1,100 @@
+cabal-version: 2.2
+
+-- This file has been generated from package.yaml by hpack version 0.36.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           warehouse-automation-system
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/junkidesu/warehouse-automation-system#readme>
+homepage:       https://github.com/junkidesu/warehouse-automation-system#readme
+bug-reports:    https://github.com/junkidesu/warehouse-automation-system/issues
+author:         Anvar Sheryatullayev
+maintainer:     alvaro.sh03@gmail.com
+copyright:      2024 Anvar Sheryatullayev
+license:        BSD-3-Clause
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    CHANGELOG.md
+
+source-repository head
+  type: git
+  location: https://github.com/junkidesu/warehouse-automation-system
+
+library
+  exposed-modules:
+      Lib
+  other-modules:
+      Paths_warehouse_automation_system
+  autogen-modules:
+      Paths_warehouse_automation_system
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , bytestring
+    , postgresql-simple
+    , servant
+    , servant-auth
+    , servant-auth-server
+    , servant-auth-swagger
+    , servant-server
+    , servant-swagger
+    , swagger2
+    , text
+  default-language: Haskell2010
+
+executable warehouse-automation-system-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_warehouse_automation_system
+  autogen-modules:
+      Paths_warehouse_automation_system
+  hs-source-dirs:
+      app
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , bytestring
+    , postgresql-simple
+    , servant
+    , servant-auth
+    , servant-auth-server
+    , servant-auth-swagger
+    , servant-server
+    , servant-swagger
+    , swagger2
+    , text
+    , warehouse-automation-system
+  default-language: Haskell2010
+
+test-suite warehouse-automation-system-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_warehouse_automation_system
+  autogen-modules:
+      Paths_warehouse_automation_system
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , bytestring
+    , postgresql-simple
+    , servant
+    , servant-auth
+    , servant-auth-server
+    , servant-auth-swagger
+    , servant-server
+    , servant-swagger
+    , swagger2
+    , text
+    , warehouse-automation-system
+  default-language: Haskell2010

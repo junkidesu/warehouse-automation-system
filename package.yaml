@@ -1,0 +1,70 @@
+name:                warehouse-automation-system
+version:             0.1.0.0
+github:              "junkidesu/warehouse-automation-system"
+license:             BSD-3-Clause
+author:              "Anvar Sheryatullayev"
+maintainer:          "alvaro.sh03@gmail.com"
+copyright:           "2024 Anvar Sheryatullayev"
+
+extra-source-files:
+- README.md
+- CHANGELOG.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/junkidesu/warehouse-automation-system#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- text
+- bytestring
+- aeson
+- servant
+- servant-server
+- servant-auth
+- servant-auth-server
+- swagger2
+- servant-swagger
+- servant-auth-swagger
+- postgresql-simple
+
+ghc-options:
+- -Wall
+- -Wcompat
+- -Widentities
+- -Wincomplete-record-updates
+- -Wincomplete-uni-patterns
+- -Wmissing-export-lists
+- -Wmissing-home-modules
+- -Wpartial-fields
+- -Wredundant-constraints
+
+library:
+  source-dirs: src
+
+executables:
+  warehouse-automation-system-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - warehouse-automation-system
+
+tests:
+  warehouse-automation-system-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - warehouse-automation-system
