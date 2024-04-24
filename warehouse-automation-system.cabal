@@ -26,14 +26,15 @@ source-repository head
 library
   exposed-modules:
       Api
+      Api.ParkingLots
       Database
       Database.Operations
       Database.Queries
       Lib
       Swagger
+      Types.Car
       Types.ParkingLot
-      Types.ParkingSpot
-      Types.Topology
+      Types.ParkingLot.New
   other-modules:
       Paths_warehouse_automation_system
   autogen-modules:
@@ -47,6 +48,7 @@ library
     , bson
     , bytestring
     , dotenv
+    , lens
     , matrix
     , mongoDB
     , postgresql-simple
@@ -81,6 +83,7 @@ executable warehouse-automation-system-exe
     , bson
     , bytestring
     , dotenv
+    , lens
     , matrix
     , mongoDB
     , postgresql-simple
@@ -117,6 +120,7 @@ test-suite warehouse-automation-system-test
     , bson
     , bytestring
     , dotenv
+    , lens
     , matrix
     , mongoDB
     , postgresql-simple

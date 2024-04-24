@@ -1,13 +1,14 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Api where
+module Api (WarehouseAPI, warehouseServer) where
 
+import Api.ParkingLots (ParkingLotsAPI, parkingLotsServer)
 import Data.Pool (Pool)
 import Database.PostgreSQL.Simple (Connection)
 import Servant
 
-type WarehouseAPI = EmptyAPI
+type WarehouseAPI = ParkingLotsAPI
 
 warehouseServer :: Pool Connection -> Server WarehouseAPI
-warehouseServer _ = emptyServer
+warehouseServer conns = parkingLotsServer conns
