@@ -24,6 +24,11 @@ type GetAllShipments =
   Summary "Get all shipments"
     :> Get '[JSON] [S.Shipment]
 
+type GetShipmentById =
+  Summary "Get shipment by ID"
+    :> Capture "car_id" Text
+    :> Get '[JSON] S.Shipment
+
 type PostShipment =
   Summary "Post a new shipment"
     :> ReqBody '[JSON] NS.NewShipment
@@ -43,10 +48,10 @@ type Protected =
           :<|> ChangeState
        )
 
-type ShipmentAPI = "shipment" :> Protected
+type ShipmentAPI = "shipment" :> (Protected :<|> GetShipmentById)
 
 shipmentServer :: Pool Connection -> Server ShipmentAPI
-shipmentServer conns = protectedServer
+shipmentServer conns = protectedServer :<|> getShipmentById
  where
   protectedServer :: Server Protected
   protectedServer (Authenticated _) =
@@ -87,3 +92,6 @@ shipmentServer conns = protectedServer
         return NoContent
       helper _ _ = throwError err400
   protectedServer _ = throwAll err401
+
+  getShipmentById :: Text -> Handler S.Shipment
+  getShipmentById = ensureExistsReturning conns shipmentById
