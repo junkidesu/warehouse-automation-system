@@ -30,8 +30,18 @@ dependencies:
 - servant-auth-server
 - swagger2
 - servant-swagger
+- servant-swagger-ui
 - servant-auth-swagger
 - postgresql-simple
+- resource-pool
+- utf8-string
+- mongoDB
+- bson
+- warp
+- wai
+- wai-logger
+- matrix
+- dotenv
 
 ghc-options:
 - -Wall

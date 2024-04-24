@@ -25,7 +25,15 @@ source-repository head
 
 library
   exposed-modules:
+      Api
+      Database
+      Database.Operations
+      Database.Queries
       Lib
+      Swagger
+      Types.ParkingLot
+      Types.ParkingSpot
+      Types.Topology
   other-modules:
       Paths_warehouse_automation_system
   autogen-modules:
@@ -36,16 +44,26 @@ library
   build-depends:
       aeson
     , base >=4.7 && <5
+    , bson
     , bytestring
+    , dotenv
+    , matrix
+    , mongoDB
     , postgresql-simple
+    , resource-pool
     , servant
     , servant-auth
     , servant-auth-server
     , servant-auth-swagger
     , servant-server
     , servant-swagger
+    , servant-swagger-ui
     , swagger2
     , text
+    , utf8-string
+    , wai
+    , wai-logger
+    , warp
   default-language: Haskell2010
 
 executable warehouse-automation-system-exe
@@ -60,17 +78,27 @@ executable warehouse-automation-system-exe
   build-depends:
       aeson
     , base >=4.7 && <5
+    , bson
     , bytestring
+    , dotenv
+    , matrix
+    , mongoDB
     , postgresql-simple
+    , resource-pool
     , servant
     , servant-auth
     , servant-auth-server
     , servant-auth-swagger
     , servant-server
     , servant-swagger
+    , servant-swagger-ui
     , swagger2
     , text
+    , utf8-string
+    , wai
+    , wai-logger
     , warehouse-automation-system
+    , warp
   default-language: Haskell2010
 
 test-suite warehouse-automation-system-test
@@ -86,15 +114,25 @@ test-suite warehouse-automation-system-test
   build-depends:
       aeson
     , base >=4.7 && <5
+    , bson
     , bytestring
+    , dotenv
+    , matrix
+    , mongoDB
     , postgresql-simple
+    , resource-pool
     , servant
     , servant-auth
     , servant-auth-server
     , servant-auth-swagger
     , servant-server
     , servant-swagger
+    , servant-swagger-ui
     , swagger2
     , text
+    , utf8-string
+    , wai
+    , wai-logger
     , warehouse-automation-system
+    , warp
   default-language: Haskell2010
