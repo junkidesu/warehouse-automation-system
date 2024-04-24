@@ -5,19 +5,36 @@ module Database.Operations (
     parkingLotById,
     parkedCars,
     parkedCarById,
+    parkedCarByIdAndParkingLot,
     insertParkedCar,
     deleteParkedCar,
+    allShipments,
+    insertShipment,
 ) where
 
 import Data.Pool (Pool)
 import Data.Text (Text)
 import Database (delete, getMany, getMany_, getOne, insertReturning)
 import Database.PostgreSQL.Simple (Connection, Only (Only))
-import Database.Queries (allParkingLotsQuery, deleteParkedCarQuery, insertParkedCarQuery, insertParkingLotQuery, parkedCarByIdQuery, parkedCarsQuery, parkingLotByIdQuery, userByUsernameQuery)
+import Database.Queries (
+    allParkingLotsQuery,
+    allShipmentsQuery,
+    deleteParkedCarQuery,
+    insertParkedCarQuery,
+    insertParkingLotQuery,
+    insertShipmentQuery,
+    parkedCarByIdAndParkingLotQuery,
+    parkedCarByIdQuery,
+    parkedCarsQuery,
+    parkingLotByIdQuery,
+    userByUsernameQuery,
+ )
 import Types.ParkingLot (ParkingLot)
 import Types.ParkingLot.New (NewParkingLot)
 import Types.ParkingSpot (ParkingSpot)
 import qualified Types.ParkingSpot.New as NPS
+import Types.Shipment (Shipment)
+import qualified Types.Shipment.New as NS
 import Types.User (User)
 
 userByUsername :: Pool Connection -> Text -> IO (Maybe User)
@@ -38,8 +55,19 @@ parkingLotById conns plId = getOne conns parkingLotByIdQuery (Only plId)
 parkedCars :: Pool Connection -> Int -> IO [ParkingSpot]
 parkedCars conns plId = getMany conns parkedCarsQuery (Only plId)
 
-parkedCarById :: Pool Connection -> Int -> Text -> IO (Maybe ParkingSpot)
-parkedCarById conns plId carId = getOne conns parkedCarByIdQuery (plId, carId)
+parkedCarByIdAndParkingLot :: Pool Connection -> Int -> Text -> IO (Maybe ParkingSpot)
+parkedCarByIdAndParkingLot conns plId carId =
+    getOne
+        conns
+        parkedCarByIdAndParkingLotQuery
+        (plId, carId)
+
+parkedCarById :: Pool Connection -> Text -> IO (Maybe ParkingSpot)
+parkedCarById conns carId =
+    getOne
+        conns
+        parkedCarByIdQuery
+        (Only carId)
 
 insertParkedCar :: Pool Connection -> Int -> NPS.NewParkingSpot -> IO ParkingSpot
 insertParkedCar conns plId nps =
@@ -50,3 +78,13 @@ insertParkedCar conns plId nps =
 
 deleteParkedCar :: Pool Connection -> Int -> Text -> IO ()
 deleteParkedCar conns plId carId = delete conns deleteParkedCarQuery (plId, carId)
+
+allShipments :: Pool Connection -> IO [Shipment]
+allShipments conns = getMany_ conns allShipmentsQuery
+
+insertShipment :: Pool Connection -> NS.NewShipment -> IO Shipment
+insertShipment conns newShipment =
+    insertReturning
+        conns
+        insertShipmentQuery
+        (NS.carId newShipment, NS.destination newShipment, NS.shipmentMode newShipment)

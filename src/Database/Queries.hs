@@ -7,8 +7,11 @@ module Database.Queries (
     parkingLotByIdQuery,
     insertParkedCarQuery,
     parkedCarsQuery,
+    parkedCarByIdAndParkingLotQuery,
     parkedCarByIdQuery,
     deleteParkedCarQuery,
+    allShipmentsQuery,
+    insertShipmentQuery,
 ) where
 
 import Database (toSqlQuery)
@@ -79,8 +82,8 @@ parkedCarsQuery =
         , "WHERE p.id = ?"
         ]
 
-parkedCarByIdQuery :: Query
-parkedCarByIdQuery =
+parkedCarByIdAndParkingLotQuery :: Query
+parkedCarByIdAndParkingLotQuery =
     toSqlQuery
         [ "SELECT"
         , "c.id, c.manufacturer, c.model, c.color,"
@@ -94,9 +97,50 @@ parkedCarByIdQuery =
         , "WHERE p.id = ? AND c.id = ?"
         ]
 
+parkedCarByIdQuery :: Query
+parkedCarByIdQuery =
+    toSqlQuery
+        [ "SELECT"
+        , "c.id, c.manufacturer, c.model, c.color,"
+        , "p.id, p.latitude, p.longitude, p.city,"
+        , "s.latitude, s.longitude"
+        , "FROM cars c"
+        , "JOIN parking_spots s"
+        , "ON c.id = s.car_id"
+        , "JOIN parking_lots p"
+        , "ON p.id = s.parking_lot_id"
+        , "WHERE c.id = ?"
+        ]
+
 deleteParkedCarQuery :: Query
 deleteParkedCarQuery =
     toSqlQuery
         [ "DELETE FROM parking_spots"
         , "WHERE parking_lot_id = ? AND car_id = ?"
+        ]
+
+allShipmentsQuery :: Query
+allShipmentsQuery =
+    toSqlQuery
+        [ "SELECT"
+        , "c.id, c.manufacturer, c.model, c.color,"
+        , "s.destination, s.shipment_mode, s.shipment_state"
+        , "FROM cars c"
+        , "JOIN shipments s"
+        , "ON s.car_id = c.id"
+        ]
+
+insertShipmentQuery :: Query
+insertShipmentQuery =
+    toSqlQuery
+        [ "WITH inserted_shipment AS ("
+        , "INSERT INTO shipments (car_id, destination, shipment_mode, shipment_state)"
+        , "VALUES (?, ?, ?, 'on_parking')"
+        , "RETURNING *)"
+        , "SELECT"
+        , "c.id, c.manufacturer, c.model, c.color,"
+        , "s.destination, s.shipment_mode, s.shipment_state"
+        , "FROM inserted_shipment s"
+        , "JOIN cars c"
+        , "ON c.id = s.car_id"
         ]

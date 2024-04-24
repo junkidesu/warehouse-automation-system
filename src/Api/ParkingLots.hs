@@ -6,7 +6,16 @@ module Api.ParkingLots (ParkingLotsAPI, parkingLotsServer) where
 import Control.Monad.IO.Class (MonadIO (liftIO))
 import Data.Pool (Pool)
 import Data.Text (Text)
-import Database.Operations (allParkingLots, deleteParkedCar, insertParkedCar, insertParkingLot, parkedCarById, parkedCars, parkingLotById)
+import Database (ensureExists)
+import Database.Operations (
+    allParkingLots,
+    deleteParkedCar,
+    insertParkedCar,
+    insertParkingLot,
+    parkedCarByIdAndParkingLot,
+    parkedCars,
+    parkingLotById,
+ )
 import Database.PostgreSQL.Simple (Connection)
 import Servant
 import Servant.Auth.Server (AuthResult (Authenticated), ThrowAll (throwAll))
@@ -93,19 +102,30 @@ parkingLotsServer conns (Authenticated _) =
             :<|> unparkCar
       where
         parkCar :: NPS.NewParkingSpot -> Handler PS.ParkingSpot
-        parkCar nps = liftIO $ insertParkedCar conns plId nps
+        parkCar nps = do
+            ensureExists conns parkingLotById plId
+
+            liftIO $ insertParkedCar conns plId nps
 
         getParkedCars :: Handler [PS.ParkingSpot]
-        getParkedCars = liftIO $ parkedCars conns plId
+        getParkedCars = do
+            ensureExists conns parkingLotById plId
+
+            liftIO $ parkedCars conns plId
 
         getParkedCarById :: Text -> Handler PS.ParkingSpot
         getParkedCarById carId = do
-            mbParkingSpot <- liftIO $ parkedCarById conns plId carId
+            ensureExists conns parkingLotById plId
+
+            mbParkingSpot <- liftIO $ parkedCarByIdAndParkingLot conns plId carId
 
             case mbParkingSpot of
                 Nothing -> throwError err404
                 Just parkingSpot -> return parkingSpot
 
         unparkCar :: Text -> Handler NoContent
-        unparkCar carId = liftIO $ deleteParkedCar conns plId carId >> pure NoContent
+        unparkCar carId = do
+            ensureExists conns parkingLotById plId
+
+            liftIO $ deleteParkedCar conns plId carId >> pure NoContent
 parkingLotsServer _ _ = throwAll err401

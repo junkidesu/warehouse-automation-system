@@ -28,6 +28,7 @@ library
       Api
       Api.Auth
       Api.ParkingLots
+      Api.Shipment
       Database
       Database.Operations
       Database.Queries
@@ -42,6 +43,10 @@ library
       Types.ParkingLot.New
       Types.ParkingSpot
       Types.ParkingSpot.New
+      Types.Shipment
+      Types.Shipment.Mode
+      Types.Shipment.New
+      Types.Shipment.State
       Types.User
   other-modules:
       Paths_warehouse_automation_system

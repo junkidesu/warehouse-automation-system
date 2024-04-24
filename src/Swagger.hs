@@ -7,6 +7,7 @@ module Swagger (API, server) where
 import Api
 import Api.Auth
 import Api.ParkingLots
+import Api.Shipment
 import Control.Lens
 import Data.Pool (Pool)
 import Data.Swagger
@@ -27,6 +28,9 @@ authOpts = subOperations (Proxy :: Proxy AuthAPI) (Proxy :: Proxy WarehouseAPI)
 parkingLotsOpts :: Traversal' Swagger Operation
 parkingLotsOpts = subOperations (Proxy :: Proxy ParkingLotsAPI) (Proxy :: Proxy WarehouseAPI)
 
+shipmentOpts :: Traversal' Swagger Operation
+shipmentOpts = subOperations (Proxy :: Proxy ShipmentAPI) (Proxy :: Proxy WarehouseAPI)
+
 swaggerDoc :: Swagger
 swaggerDoc =
     toSwagger (Proxy :: Proxy WarehouseAPI)
@@ -36,6 +40,7 @@ swaggerDoc =
         & info . license ?~ "BSD"
         & applyTagsFor authOpts ["authentication" & description ?~ "Authenticate to the system"]
         & applyTagsFor parkingLotsOpts ["parking" & description ?~ "Manage parking lots"]
+        & applyTagsFor shipmentOpts ["shipment" & description ?~ "Manage shipment"]
 
 server :: Pool Connection -> JWTSettings -> Server API
 server conns jwts =
