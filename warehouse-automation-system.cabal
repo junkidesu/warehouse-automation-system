@@ -45,6 +45,8 @@ library
       Types.ParkingSpot.New
       Types.Shipment
       Types.Shipment.Action
+      Types.Shipment.Feedback
+      Types.Shipment.Feedback.New
       Types.Shipment.Mode
       Types.Shipment.New
       Types.Shipment.State

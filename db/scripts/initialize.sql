@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS parking_spots;
+DROP TABLE IF EXISTS feedbacks;
 DROP TABLE IF EXISTS shipments;
 DROP TABLE IF EXISTS parking_lots;
 DROP TABLE IF EXISTS cars;
@@ -52,8 +53,16 @@ CREATE TABLE IF NOT EXISTS shipments (
 	car_id TEXT NOT NULL,
 	destination TEXT NOT NULL,
 	shipment_mode TEXT NOT NULL,
-	shipment_state TEXT NOT NULL
+	shipment_state TEXT NOT NULL,
+	FOREIGN KEY(car_id) REFERENCES cars(id) ON DELETE CASCADE
 );
 
 INSERT INTO shipments (car_id, destination, shipment_mode, shipment_state)
 VALUES ('some-id-1', 'Tashkent, Almazar District', 'train', 'on_parking');
+
+CREATE TABLE IF NOT EXISTS feedbacks (
+	car_id TEXT NOT NULL,
+	is_satisfied BOOL NOT NULL,
+	message TEXT,
+	FOREIGN KEY(car_id) REFERENCES cars(id) ON DELETE CASCADE
+);

@@ -14,6 +14,8 @@ module Database.Queries (
     shipmentByIdQuery,
     insertShipmentQuery,
     updateShipmentStateQuery,
+    feedbackByIdQuery,
+    insertFeedbackQuery,
 ) where
 
 import Database (toSqlQuery)
@@ -165,4 +167,31 @@ updateShipmentStateQuery =
         [ "UPDATE shipments"
         , "SET shipment_state = ?"
         , "WHERE car_id = ?"
+        ]
+
+feedbackByIdQuery :: Query
+feedbackByIdQuery =
+    toSqlQuery
+        [ "SELECT"
+        , "c.id, c.manufacturer, c.model, c.color,"
+        , "f.is_satisfied, f.message"
+        , "FROM feedbacks f"
+        , "JOIN cars c"
+        , "ON c.id = f.car_id"
+        , "WHERE c.id = ?"
+        ]
+
+insertFeedbackQuery :: Query
+insertFeedbackQuery =
+    toSqlQuery
+        [ "WITH inserted_feedback AS ("
+        , "INSERT INTO feedbacks (car_id, is_satisfied, message)"
+        , "VALUES (?, ?, ?)"
+        , "RETURNING *)"
+        , "SELECT"
+        , "c.id, c.manufacturer, c.model, c.color,"
+        , "f.is_satisfied, f.message"
+        , "FROM inserted_feedback f"
+        , "JOIN cars c"
+        , "ON c.id = f.car_id"
         ]

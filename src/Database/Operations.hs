@@ -12,32 +12,22 @@ module Database.Operations (
     shipmentById,
     insertShipment,
     updateShipmentState,
+    feedbackById,
+    insertFeedback,
 ) where
 
 import Data.Pool (Pool)
 import Data.Text (Text)
 import Database (delete, getMany, getMany_, getOne, insert, insertReturning)
 import Database.PostgreSQL.Simple (Connection, Only (Only))
-import Database.Queries (
-    allParkingLotsQuery,
-    allShipmentsQuery,
-    deleteParkedCarQuery,
-    insertParkedCarQuery,
-    insertParkingLotQuery,
-    insertShipmentQuery,
-    parkedCarByIdAndParkingLotQuery,
-    parkedCarByIdQuery,
-    parkedCarsQuery,
-    parkingLotByIdQuery,
-    shipmentByIdQuery,
-    updateShipmentStateQuery,
-    userByUsernameQuery,
- )
+import Database.Queries
 import Types.ParkingLot (ParkingLot)
 import Types.ParkingLot.New (NewParkingLot)
 import Types.ParkingSpot (ParkingSpot)
 import qualified Types.ParkingSpot.New as NPS
 import Types.Shipment (Shipment)
+import Types.Shipment.Feedback (Feedback)
+import qualified Types.Shipment.Feedback.New as NF
 import qualified Types.Shipment.New as NS
 import Types.Shipment.State (State)
 import Types.User (User)
@@ -99,3 +89,13 @@ insertShipment conns newShipment =
 
 updateShipmentState :: Pool Connection -> Text -> State -> IO ()
 updateShipmentState conns carId newState = insert conns updateShipmentStateQuery (newState, carId)
+
+feedbackById :: Pool Connection -> Text -> IO (Maybe Feedback)
+feedbackById conns carId = getOne conns feedbackByIdQuery (Only carId)
+
+insertFeedback :: Pool Connection -> Text -> NF.NewFeedback -> IO Feedback
+insertFeedback conns carId nf =
+    insertReturning
+        conns
+        insertFeedbackQuery
+        (carId, NF.isSatisfied nf, NF.message nf)
