@@ -36,8 +36,8 @@ dependencies:
 - postgresql-simple
 - resource-pool
 - utf8-string
-- mongoDB
-- bson
+- password
+- time
 - warp
 - wai
 - wai-logger

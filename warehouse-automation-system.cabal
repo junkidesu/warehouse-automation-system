@@ -26,17 +26,23 @@ source-repository head
 library
   exposed-modules:
       Api
+      Api.Auth
       Api.ParkingLots
       Database
       Database.Operations
       Database.Queries
       Lib
       Swagger
+      Types.Auth.Credentials
+      Types.Auth.JWTAuth
+      Types.Auth.Response
+      Types.Auth.User
       Types.Car
       Types.ParkingLot
       Types.ParkingLot.New
       Types.ParkingSpot
       Types.ParkingSpot.New
+      Types.User
   other-modules:
       Paths_warehouse_automation_system
   autogen-modules:
@@ -47,12 +53,11 @@ library
   build-depends:
       aeson
     , base >=4.7 && <5
-    , bson
     , bytestring
     , dotenv
     , lens
     , matrix
-    , mongoDB
+    , password
     , postgresql-simple
     , resource-pool
     , servant
@@ -64,6 +69,7 @@ library
     , servant-swagger-ui
     , swagger2
     , text
+    , time
     , utf8-string
     , wai
     , wai-logger
@@ -82,12 +88,11 @@ executable warehouse-automation-system-exe
   build-depends:
       aeson
     , base >=4.7 && <5
-    , bson
     , bytestring
     , dotenv
     , lens
     , matrix
-    , mongoDB
+    , password
     , postgresql-simple
     , resource-pool
     , servant
@@ -99,6 +104,7 @@ executable warehouse-automation-system-exe
     , servant-swagger-ui
     , swagger2
     , text
+    , time
     , utf8-string
     , wai
     , wai-logger
@@ -119,12 +125,11 @@ test-suite warehouse-automation-system-test
   build-depends:
       aeson
     , base >=4.7 && <5
-    , bson
     , bytestring
     , dotenv
     , lens
     , matrix
-    , mongoDB
+    , password
     , postgresql-simple
     , resource-pool
     , servant
@@ -136,6 +141,7 @@ test-suite warehouse-automation-system-test
     , servant-swagger-ui
     , swagger2
     , text
+    , time
     , utf8-string
     , wai
     , wai-logger

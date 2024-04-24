@@ -1,4 +1,5 @@
 module Database.Operations (
+    userByUsername,
     allParkingLots,
     insertParkingLot,
     parkingLotById,
@@ -12,11 +13,15 @@ import Data.Pool (Pool)
 import Data.Text (Text)
 import Database (delete, getMany, getMany_, getOne, insertReturning)
 import Database.PostgreSQL.Simple (Connection, Only (Only))
-import Database.Queries (allParkingLotsQuery, deleteParkedCarQuery, insertParkedCarQuery, insertParkingLotQuery, parkedCarByIdQuery, parkedCarsQuery, parkingLotByIdQuery)
+import Database.Queries (allParkingLotsQuery, deleteParkedCarQuery, insertParkedCarQuery, insertParkingLotQuery, parkedCarByIdQuery, parkedCarsQuery, parkingLotByIdQuery, userByUsernameQuery)
 import Types.ParkingLot (ParkingLot)
 import Types.ParkingLot.New (NewParkingLot)
 import Types.ParkingSpot (ParkingSpot)
 import qualified Types.ParkingSpot.New as NPS
+import Types.User (User)
+
+userByUsername :: Pool Connection -> Text -> IO (Maybe User)
+userByUsername conns username = getOne conns userByUsernameQuery (Only username)
 
 allParkingLots :: Pool Connection -> IO [ParkingLot]
 allParkingLots conns = getMany_ conns allParkingLotsQuery

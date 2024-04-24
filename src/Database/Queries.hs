@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Database.Queries (
+    userByUsernameQuery,
     allParkingLotsQuery,
     insertParkingLotQuery,
     parkingLotByIdQuery,
@@ -12,6 +13,13 @@ module Database.Queries (
 
 import Database (toSqlQuery)
 import Database.PostgreSQL.Simple (Query)
+
+userByUsernameQuery :: Query
+userByUsernameQuery =
+    toSqlQuery
+        [ "SELECT * FROM users"
+        , "WHERE username = ?"
+        ]
 
 allParkingLotsQuery :: Query
 allParkingLotsQuery =

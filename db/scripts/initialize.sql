@@ -2,6 +2,15 @@ DROP TABLE IF EXISTS parking_spots;
 DROP TABLE IF EXISTS parking_lots;
 DROP TABLE IF EXISTS cars;
 
+CREATE TABLE IF NOT EXISTS users (
+	id INT NOT NULL,
+	username TEXT NOT NULL,
+	passwordHash TEXT NOT NULL
+);
+
+INSERT INTO users (id, username, passwordHash)
+VALUES (1, 'admin', '$2b$10$2dsWB4pJedMef6Iuv4J64OyKYn85z/CHYzrWJ0iGouv2e3NMKWADu');
+
 CREATE TABLE IF NOT EXISTS parking_lots (
 	id SERIAL PRIMARY KEY,
 	latitude DOUBLE PRECISION NOT NULL,
