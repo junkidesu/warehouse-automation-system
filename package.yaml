@@ -40,6 +40,7 @@ dependencies:
 - time
 - warp
 - wai
+- wai-cors
 - wai-logger
 - matrix
 - dotenv

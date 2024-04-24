@@ -30,6 +30,7 @@ library
       Api.ParkingLots
       Api.Ping
       Api.Shipment
+      Cors
       Database
       Database.Operations
       Database.Queries
@@ -81,6 +82,7 @@ library
     , time
     , utf8-string
     , wai
+    , wai-cors
     , wai-logger
     , warp
   default-language: Haskell2010
@@ -116,6 +118,7 @@ executable warehouse-automation-system-exe
     , time
     , utf8-string
     , wai
+    , wai-cors
     , wai-logger
     , warehouse-automation-system
     , warp
@@ -153,6 +156,7 @@ test-suite warehouse-automation-system-test
     , time
     , utf8-string
     , wai
+    , wai-cors
     , wai-logger
     , warehouse-automation-system
     , warp
