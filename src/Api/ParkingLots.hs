@@ -9,6 +9,8 @@ import Data.Text (Text)
 import Database.Operations (allParkingLots, deleteParkedCar, insertParkedCar, insertParkingLot, parkedCarById, parkedCars, parkingLotById)
 import Database.PostgreSQL.Simple (Connection)
 import Servant
+import Servant.Auth.Server (AuthResult (Authenticated), ThrowAll (throwAll))
+import Types.Auth.JWTAuth (JWTAuth)
 import Types.ParkingLot (ParkingLot)
 import Types.ParkingLot.New (NewParkingLot)
 import Types.ParkingSpot (ParkingSpot)
@@ -55,6 +57,7 @@ type ParkedCarsAPI =
 
 type ParkingLotsAPI =
     "parking"
+        :> JWTAuth
         :> ( GetAllParkingLots
                 :<|> AddParkingLot
                 :<|> GetParkingLotById
@@ -62,7 +65,7 @@ type ParkingLotsAPI =
            )
 
 parkingLotsServer :: Pool Connection -> Server ParkingLotsAPI
-parkingLotsServer conns =
+parkingLotsServer conns (Authenticated _) =
     getAllParkingLots
         :<|> addParkingLot
         :<|> getParkingLotById
@@ -105,3 +108,4 @@ parkingLotsServer conns =
 
         unparkCar :: Text -> Handler NoContent
         unparkCar carId = liftIO $ deleteParkedCar conns plId carId >> pure NoContent
+parkingLotsServer _ _ = throwAll err401

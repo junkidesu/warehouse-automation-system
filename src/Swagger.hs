@@ -13,6 +13,7 @@ import Data.Swagger
 import Database.PostgreSQL.Simple (Connection)
 import Servant
 import Servant.Auth.Server (JWTSettings)
+import Servant.Auth.Swagger ()
 import Servant.Swagger
 import Servant.Swagger.UI (SwaggerSchemaUI, swaggerSchemaUIServer)
 
