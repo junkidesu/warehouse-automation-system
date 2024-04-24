@@ -35,6 +35,8 @@ library
       Types.Car
       Types.ParkingLot
       Types.ParkingLot.New
+      Types.ParkingSpot
+      Types.ParkingSpot.New
   other-modules:
       Paths_warehouse_automation_system
   autogen-modules:

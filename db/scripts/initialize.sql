@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS parking_spots;
 DROP TABLE IF EXISTS parking_lots;
 DROP TABLE IF EXISTS cars;
 
@@ -15,3 +16,11 @@ CREATE TABLE IF NOT EXISTS cars (
 	color TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS parking_spots (
+	car_id TEXT NOT NULL,
+	parking_lot_id INT NOT NULL,
+	latitude DOUBLE PRECISION NOT NULL,
+	longitude DOUBLE PRECISION NOT NULL,
+	FOREIGN KEY(car_id) REFERENCES cars(id) ON DELETE CASCADE,
+	FOREIGN KEY(parking_lot_id) REFERENCES parking_lots(id) ON DELETE CASCADE
+);

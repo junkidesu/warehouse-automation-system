@@ -2,7 +2,7 @@
 
 module Types.ParkingLot (ParkingLot (..)) where
 
-import Data.Aeson (ToJSON)
+import Data.Aeson (FromJSON, ToJSON)
 import Data.Swagger (ToSchema)
 import Data.Text (Text)
 import Database.PostgreSQL.Simple (FromRow, ToRow)
@@ -18,5 +18,6 @@ data ParkingLot = ParkingLot
 
 instance FromRow ParkingLot
 instance ToRow ParkingLot
+instance FromJSON ParkingLot
 instance ToJSON ParkingLot
 instance ToSchema ParkingLot
