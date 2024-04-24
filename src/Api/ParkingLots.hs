@@ -6,11 +6,12 @@ module Api.ParkingLots (ParkingLotsAPI, parkingLotsServer) where
 import Control.Monad.IO.Class (MonadIO (liftIO))
 import Data.Pool (Pool)
 import Data.Text (Text)
-import Database.Operations (allParkingLots, deleteParkedCar, insertParkedCar, insertParkingLot, parkedCars, parkingLotById)
+import Database.Operations (allParkingLots, deleteParkedCar, insertParkedCar, insertParkingLot, parkedCarById, parkedCars, parkingLotById)
 import Database.PostgreSQL.Simple (Connection)
 import Servant
 import Types.ParkingLot (ParkingLot)
 import Types.ParkingLot.New (NewParkingLot)
+import Types.ParkingSpot (ParkingSpot)
 import qualified Types.ParkingSpot as PS
 import qualified Types.ParkingSpot.New as NPS
 
@@ -37,6 +38,11 @@ type GetParkedCars =
     Summary "Get cars parked in the parking lot"
         :> Get '[JSON] [PS.ParkingSpot]
 
+type GetParkedCarById =
+    Summary "Get parked car by ID"
+        :> Capture "car_id" Text
+        :> Get '[JSON] ParkingSpot
+
 type UnparkCar =
     Summary "Remove a car from the parking lot"
         :> Capture "car_id" Text
@@ -45,7 +51,7 @@ type UnparkCar =
 type ParkedCarsAPI =
     Capture "id" Int
         :> "cars"
-        :> (ParkCar :<|> GetParkedCars :<|> UnparkCar)
+        :> (ParkCar :<|> GetParkedCars :<|> GetParkedCarById :<|> UnparkCar)
 
 type ParkingLotsAPI =
     "parking"
@@ -77,13 +83,25 @@ parkingLotsServer conns =
             Just parkingLot -> return parkingLot
 
     parkedCarsServer :: Server ParkedCarsAPI
-    parkedCarsServer plId = parkCar :<|> getParkedCars :<|> unparkCar
+    parkedCarsServer plId =
+        parkCar
+            :<|> getParkedCars
+            :<|> getParkedCarById
+            :<|> unparkCar
       where
         parkCar :: NPS.NewParkingSpot -> Handler PS.ParkingSpot
         parkCar nps = liftIO $ insertParkedCar conns plId nps
 
         getParkedCars :: Handler [PS.ParkingSpot]
         getParkedCars = liftIO $ parkedCars conns plId
+
+        getParkedCarById :: Text -> Handler PS.ParkingSpot
+        getParkedCarById carId = do
+            mbParkingSpot <- liftIO $ parkedCarById conns plId carId
+
+            case mbParkingSpot of
+                Nothing -> throwError err404
+                Just parkingSpot -> return parkingSpot
 
         unparkCar :: Text -> Handler NoContent
         unparkCar carId = liftIO $ deleteParkedCar conns plId carId >> pure NoContent

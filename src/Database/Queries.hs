@@ -6,6 +6,7 @@ module Database.Queries (
     parkingLotByIdQuery,
     insertParkedCarQuery,
     parkedCarsQuery,
+    parkedCarByIdQuery,
     deleteParkedCarQuery,
 ) where
 
@@ -68,6 +69,21 @@ parkedCarsQuery =
         , "JOIN parking_lots p"
         , "ON p.id = s.parking_lot_id"
         , "WHERE p.id = ?"
+        ]
+
+parkedCarByIdQuery :: Query
+parkedCarByIdQuery =
+    toSqlQuery
+        [ "SELECT"
+        , "c.id, c.manufacturer, c.model, c.color,"
+        , "p.id, p.latitude, p.longitude, p.city,"
+        , "s.latitude, s.longitude"
+        , "FROM cars c"
+        , "JOIN parking_spots s"
+        , "ON c.id = s.car_id"
+        , "JOIN parking_lots p"
+        , "ON p.id = s.parking_lot_id"
+        , "WHERE p.id = ? AND c.id = ?"
         ]
 
 deleteParkedCarQuery :: Query
