@@ -6,6 +6,7 @@ module Database.Queries (
     parkingLotByIdQuery,
     insertParkedCarQuery,
     parkedCarsQuery,
+    deleteParkedCarQuery,
 ) where
 
 import Database (toSqlQuery)
@@ -67,4 +68,11 @@ parkedCarsQuery =
         , "JOIN parking_lots p"
         , "ON p.id = s.parking_lot_id"
         , "WHERE p.id = ?"
+        ]
+
+deleteParkedCarQuery :: Query
+deleteParkedCarQuery =
+    toSqlQuery
+        [ "DELETE FROM parking_spots"
+        , "WHERE parking_lot_id = ? AND car_id = ?"
         ]

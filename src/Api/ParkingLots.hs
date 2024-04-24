@@ -5,7 +5,8 @@ module Api.ParkingLots (ParkingLotsAPI, parkingLotsServer) where
 
 import Control.Monad.IO.Class (MonadIO (liftIO))
 import Data.Pool (Pool)
-import Database.Operations (allParkingLots, insertParkedCar, insertParkingLot, parkedCars, parkingLotById)
+import Data.Text (Text)
+import Database.Operations (allParkingLots, deleteParkedCar, insertParkedCar, insertParkingLot, parkedCars, parkingLotById)
 import Database.PostgreSQL.Simple (Connection)
 import Servant
 import Types.ParkingLot (ParkingLot)
@@ -36,10 +37,15 @@ type GetParkedCars =
     Summary "Get cars parked in the parking lot"
         :> Get '[JSON] [PS.ParkingSpot]
 
+type UnparkCar =
+    Summary "Remove a car from the parking lot"
+        :> Capture "car_id" Text
+        :> Verb 'DELETE 204 '[JSON] NoContent
+
 type ParkedCarsAPI =
     Capture "id" Int
         :> "cars"
-        :> (ParkCar :<|> GetParkedCars)
+        :> (ParkCar :<|> GetParkedCars :<|> UnparkCar)
 
 type ParkingLotsAPI =
     "parking"
@@ -71,10 +77,13 @@ parkingLotsServer conns =
             Just parkingLot -> return parkingLot
 
     parkedCarsServer :: Server ParkedCarsAPI
-    parkedCarsServer plId = parkCar :<|> getParkedCars
+    parkedCarsServer plId = parkCar :<|> getParkedCars :<|> unparkCar
       where
         parkCar :: NPS.NewParkingSpot -> Handler PS.ParkingSpot
         parkCar nps = liftIO $ insertParkedCar conns plId nps
 
         getParkedCars :: Handler [PS.ParkingSpot]
         getParkedCars = liftIO $ parkedCars conns plId
+
+        unparkCar :: Text -> Handler NoContent
+        unparkCar carId = liftIO $ deleteParkedCar conns plId carId >> pure NoContent

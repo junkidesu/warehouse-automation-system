@@ -4,12 +4,14 @@ module Database.Operations (
     parkingLotById,
     parkedCars,
     insertParkedCar,
+    deleteParkedCar,
 ) where
 
 import Data.Pool (Pool)
-import Database (getMany, getMany_, getOne, insertReturning)
+import Data.Text (Text)
+import Database (delete, getMany, getMany_, getOne, insertReturning)
 import Database.PostgreSQL.Simple (Connection, Only (Only))
-import Database.Queries (allParkingLotsQuery, insertParkedCarQuery, insertParkingLotQuery, parkedCarsQuery, parkingLotByIdQuery)
+import Database.Queries (allParkingLotsQuery, deleteParkedCarQuery, insertParkedCarQuery, insertParkingLotQuery, parkedCarsQuery, parkingLotByIdQuery)
 import Types.ParkingLot (ParkingLot)
 import Types.ParkingLot.New (NewParkingLot)
 import Types.ParkingSpot (ParkingSpot)
@@ -36,3 +38,6 @@ insertParkedCar conns plId nps =
         conns
         insertParkedCarQuery
         (NPS.carId nps, NPS.manufacturer nps, NPS.model nps, NPS.color nps, plId, NPS.latitude nps, NPS.longitude nps)
+
+deleteParkedCar :: Pool Connection -> Int -> Text -> IO ()
+deleteParkedCar conns plId carId = delete conns deleteParkedCarQuery (plId, carId)
