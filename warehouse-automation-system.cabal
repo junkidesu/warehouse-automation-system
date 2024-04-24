@@ -28,6 +28,7 @@ library
       Api
       Api.Auth
       Api.ParkingLots
+      Api.Ping
       Api.Shipment
       Database
       Database.Operations
