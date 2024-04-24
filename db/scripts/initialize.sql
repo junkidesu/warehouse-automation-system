@@ -44,7 +44,8 @@ CREATE TABLE IF NOT EXISTS parking_spots (
 );
 
 INSERT INTO parking_spots (car_id, parking_lot_id, latitude, longitude)
-VALUES ('some-id-1', 1, 20.1, 10.1);
+VALUES ('some-id-1', 1, 20.1, 10.1),
+('some-id-2', 1, 20.2, 10.2);
 
 
 CREATE TABLE IF NOT EXISTS shipments (

@@ -9,12 +9,14 @@ module Database.Operations (
     insertParkedCar,
     deleteParkedCar,
     allShipments,
+    shipmentById,
     insertShipment,
+    updateShipmentState,
 ) where
 
 import Data.Pool (Pool)
 import Data.Text (Text)
-import Database (delete, getMany, getMany_, getOne, insertReturning)
+import Database (delete, getMany, getMany_, getOne, insert, insertReturning)
 import Database.PostgreSQL.Simple (Connection, Only (Only))
 import Database.Queries (
     allParkingLotsQuery,
@@ -27,6 +29,8 @@ import Database.Queries (
     parkedCarByIdQuery,
     parkedCarsQuery,
     parkingLotByIdQuery,
+    shipmentByIdQuery,
+    updateShipmentStateQuery,
     userByUsernameQuery,
  )
 import Types.ParkingLot (ParkingLot)
@@ -35,6 +39,7 @@ import Types.ParkingSpot (ParkingSpot)
 import qualified Types.ParkingSpot.New as NPS
 import Types.Shipment (Shipment)
 import qualified Types.Shipment.New as NS
+import Types.Shipment.State (State)
 import Types.User (User)
 
 userByUsername :: Pool Connection -> Text -> IO (Maybe User)
@@ -82,9 +87,15 @@ deleteParkedCar conns plId carId = delete conns deleteParkedCarQuery (plId, carI
 allShipments :: Pool Connection -> IO [Shipment]
 allShipments conns = getMany_ conns allShipmentsQuery
 
+shipmentById :: Pool Connection -> Text -> IO (Maybe Shipment)
+shipmentById conns carId = getOne conns shipmentByIdQuery (Only carId)
+
 insertShipment :: Pool Connection -> NS.NewShipment -> IO Shipment
 insertShipment conns newShipment =
     insertReturning
         conns
         insertShipmentQuery
         (NS.carId newShipment, NS.destination newShipment, NS.shipmentMode newShipment)
+
+updateShipmentState :: Pool Connection -> Text -> State -> IO ()
+updateShipmentState conns carId newState = insert conns updateShipmentStateQuery (newState, carId)

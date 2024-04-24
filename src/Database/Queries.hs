@@ -11,7 +11,9 @@ module Database.Queries (
     parkedCarByIdQuery,
     deleteParkedCarQuery,
     allShipmentsQuery,
+    shipmentByIdQuery,
     insertShipmentQuery,
+    updateShipmentStateQuery,
 ) where
 
 import Database (toSqlQuery)
@@ -130,6 +132,18 @@ allShipmentsQuery =
         , "ON s.car_id = c.id"
         ]
 
+shipmentByIdQuery :: Query
+shipmentByIdQuery =
+    toSqlQuery
+        [ "SELECT"
+        , "c.id, c.manufacturer, c.model, c.color,"
+        , "s.destination, s.shipment_mode, s.shipment_state"
+        , "FROM cars c"
+        , "JOIN shipments s"
+        , "ON s.car_id = c.id"
+        , "WHERE c.id = ?"
+        ]
+
 insertShipmentQuery :: Query
 insertShipmentQuery =
     toSqlQuery
@@ -143,4 +157,12 @@ insertShipmentQuery =
         , "FROM inserted_shipment s"
         , "JOIN cars c"
         , "ON c.id = s.car_id"
+        ]
+
+updateShipmentStateQuery :: Query
+updateShipmentStateQuery =
+    toSqlQuery
+        [ "UPDATE shipments"
+        , "SET shipment_state = ?"
+        , "WHERE car_id = ?"
         ]
