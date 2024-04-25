@@ -10,7 +10,7 @@ import GHC.Generics (Generic)
 
 data ParkingLot = ParkingLot
     { id :: !Int
-    , latitide :: !Double
+    , latitude :: !Double
     , longitude :: !Double
     , city :: !Text
     }
