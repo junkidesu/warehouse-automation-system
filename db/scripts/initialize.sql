@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS parking_lots (
 );
 
 INSERT INTO parking_lots (latitude, longitude, city)
-VALUES (20.0, 10.0, 'Fictional City');
+VALUES (40.6571889, 72.2267459, 'Asaka');
 
 CREATE TABLE IF NOT EXISTS cars (
 	id TEXT NOT NULL PRIMARY KEY,
@@ -31,9 +31,10 @@ CREATE TABLE IF NOT EXISTS cars (
 	color TEXT NOT NULL
 );
 
-INSERT INTO cars (id, manufacturer, model, color)
-VALUES ('some-id-1', 'Ravon', 'Cobalt', 'white'),
-('some-id-2', 'Chevrolet', 'Gentra', 'grey');
+INSERT INTO cars (id, model, color)
+VALUES ('XWBSA695ERA034519', '1EY69', 'GBO'),
+('XWBSA6959RA067189', '1EX69', 'GAZ'),
+('XWBJA69V9RA076372', '1JX69', 'GAZ');
 
 CREATE TABLE IF NOT EXISTS parking_spots (
 	car_id TEXT NOT NULL,
@@ -45,8 +46,9 @@ CREATE TABLE IF NOT EXISTS parking_spots (
 );
 
 INSERT INTO parking_spots (car_id, parking_lot_id, latitude, longitude)
-VALUES ('some-id-1', 1, 20.1, 10.1),
-('some-id-2', 1, 20.2, 10.2);
+VALUES ('XWBSA695ERA034519', 1, 40.659661, 72.2276053),
+('XWBSA6959RA067189', 1, 40.65947, 72.2279133),
+('XWBJA69V9RA076372', 1, 40.659275, 72.2282373);
 
 
 CREATE TABLE IF NOT EXISTS shipments (
@@ -58,7 +60,7 @@ CREATE TABLE IF NOT EXISTS shipments (
 );
 
 INSERT INTO shipments (car_id, destination, shipment_mode, shipment_state)
-VALUES ('some-id-1', 'Tashkent, Almazar District', 'train', 'on_parking');
+VALUES ('XWBSA695ERA034519', 'Tashkent, Almazar District', 'train', 'on_parking');
 
 CREATE TABLE IF NOT EXISTS feedbacks (
 	car_id TEXT NOT NULL,
